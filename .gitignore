@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+.venv/
+venv/
+
+# Env
+.env
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Local databases
+milvus_faq.db
+*.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Cache
+.cache/
