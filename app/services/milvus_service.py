@@ -1,10 +1,12 @@
 from pymilvus import MilvusClient
 
+from app.core.config import settings
+
 
 class MilvusFAQStore:
-    def __init__(self, uri: str = "./milvus_faq.db", collection_name: str = "faq_collection"):
-        self.client = MilvusClient(uri=uri)
-        self.collection_name = collection_name
+    def __init__(self, uri: str | None = None, collection_name: str | None = None):
+        self.client = MilvusClient(uri=uri or settings.MILVUS_URI)
+        self.collection_name = collection_name or settings.MILVUS_COLLECTION_NAME
 
     def recreate_collection(self, dim: int) -> None:
         existing = self.client.list_collections()

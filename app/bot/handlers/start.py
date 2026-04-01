@@ -7,5 +7,7 @@ router = Router()
 
 @router.message(CommandStart())
 async def start_handler(message: Message) -> None:
-    await message.answer("Привет. Напиши свой вопрос.")
-
+    await message.answer(
+        "Привет. Я бот для абитуриентов РАНЕПА.\n"
+        "Задай вопрос про поступление, документы, программы или правила приема."
+    )

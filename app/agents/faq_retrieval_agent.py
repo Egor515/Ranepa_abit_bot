@@ -18,7 +18,7 @@ class FAQRetrievalAgent:
         self.embedder = EmbeddingService()
         self.store = MilvusFAQStore()
 
-    def search(self, query: str, top_k: int = 5, threshold: float = 0.9) -> List[FAQCandidate]:
+    def search(self, query: str, top_k: int = 5, threshold: float = 0.95) -> List[FAQCandidate]:
         query_vector = self.embedder.embed_text(query)
         results = self.store.search(query_vector=query_vector, limit=top_k)
 

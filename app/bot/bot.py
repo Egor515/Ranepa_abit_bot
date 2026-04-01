@@ -4,9 +4,11 @@ from app.bot.handlers.start import router as start_router
 from app.bot.handlers.messages import router as message_router
 from app.bot.handlers.faq_callbacks import router as faq_callback_router
 from app.core.config import settings
+from app.core.logging import configure_logging
 
 
 def create_bot() -> Bot:
+    configure_logging()
     return Bot(token=settings.BOT_TOKEN)
 
 

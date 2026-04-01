@@ -1,31 +1,29 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 
-from app.agents.faq_retrieval_agent import FAQRetrievalAgent
+from app.core.container import get_pipeline
+from app.services.session_store import session_store
 
 router = Router()
-
-faq_agent = FAQRetrievalAgent()
 
 
 @router.callback_query(F.data.startswith("faq:"))
 async def faq_callback_handler(callback: CallbackQuery) -> None:
     data = callback.data or ""
+    user_id = callback.from_user.id
+    state = session_store.get_state(user_id)
 
-    if data == "faq:none":
+    if state is None:
         await callback.message.answer(
-            "Хорошо, подходящий FAQ не найден. Следующим этапом подключим SQL/Grok ветку."
+            "Сессия с вариантами FAQ истекла. Пожалуйста, задайте вопрос заново."
         )
         await callback.answer()
         return
 
-    faq_id = int(data.replace("faq:", "", 1))
-    faq_item = faq_agent.get_by_id(faq_id)
+    pipeline = get_pipeline()
+    faq_id = None if data == "faq:none" else int(data.replace("faq:", "", 1))
+    updated_state = pipeline.handle_faq_selection(state=state, faq_id=faq_id)
+    session_store.set_state(user_id, updated_state)
 
-    if faq_item is None:
-        await callback.message.answer("Не удалось найти выбранный FAQ.")
-        await callback.answer()
-        return
-
-    await callback.message.answer(faq_item.answer)
+    await callback.message.answer(updated_state.final_answer or "Не удалось обработать выбор FAQ.")
     await callback.answer()

@@ -1,3 +1,4 @@
+from app.core.config import settings
 from app.services.faq_loader import load_faq_from_excel
 from app.services.embedding_service import EmbeddingService
 from app.services.milvus_service import MilvusFAQStore
@@ -5,9 +6,9 @@ from app.services.milvus_service import MilvusFAQStore
 
 def main():
     faq_items = load_faq_from_excel(
-        file_path="data/Database.xlsx",
-        question_column="Question",
-        answer_column="Answer",
+        file_path=settings.FAQ_SOURCE_PATH,
+        question_column=settings.FAQ_QUESTION_COLUMN,
+        answer_column=settings.FAQ_ANSWER_COLUMN,
     )
 
     embedder = EmbeddingService()
